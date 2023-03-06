@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+
+  "imports": {
+    "standart": "https://deno.land/std@0.178.0/testing/asserts.ts"
+  }
+}
