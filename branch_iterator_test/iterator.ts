@@ -7,11 +7,13 @@ export enum Floor {
 
 export interface RiverMap {
   data: Array<Array<Floor>>;
+  source: [number, number];
 }
 
 export function mapParse(path: string): RiverMap {
   let map: RiverMap = {
     data: [[]],
+    source: [0, 0],
   };
 
   return map;

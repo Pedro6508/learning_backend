@@ -56,6 +56,7 @@ Deno.test({
           Floor.Outlet,
         ],
       ],
+      source: [0, 0],
     };
 
     assertEquals(
@@ -119,6 +120,7 @@ Deno.test({
           Floor.Outlet,
         ],
       ],
+      source: [0, 0],
     };
 
     const expected_map: RiverMap = {
@@ -172,6 +174,7 @@ Deno.test({
           Floor.Outlet,
         ],
       ],
+      source: [0, 0],
     };
 
     assertEquals(riverRun(initial_map), expected_map);
@@ -233,6 +236,7 @@ Deno.test({
           Floor.Outlet,
         ],
       ],
+      source: [0, 0],
     };
 
     assertEquals(
