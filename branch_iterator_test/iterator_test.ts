@@ -8,7 +8,7 @@ Deno.test({
     const expected_map: RiverMap = {
       data: [
         [
-          Floor.Source,
+          Floor.Water,
           Floor.Flat,
           Floor.Flat,
           Floor.Flat,
@@ -72,7 +72,7 @@ Deno.test({
     const initial_map: RiverMap = {
       data: [
         [
-          Floor.Source,
+          Floor.Water,
           Floor.Flat,
           Floor.Flat,
           Floor.Flat,
@@ -126,7 +126,7 @@ Deno.test({
     const expected_map: RiverMap = {
       data: [
         [
-          Floor.Source,
+          Floor.Water,
           Floor.Water,
           Floor.Water,
           Floor.Water,
@@ -188,7 +188,7 @@ Deno.test({
     const expected_map: RiverMap = {
       data: [
         [
-          Floor.Source,
+          Floor.Water,
           Floor.Water,
           Floor.Water,
           Floor.Water,
