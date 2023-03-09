@@ -4,7 +4,7 @@ import { Floor, IterMove, mapParse, RiverMap, riverRun } from "./iterator.ts";
 Deno.test({
   name: "iterator",
   fn: async (test) => {
-    let iterMove = new IterMove();
+    const iterMove = new IterMove();
 
     let index = 0;
     const expectedMove = [
@@ -14,7 +14,7 @@ Deno.test({
       [0, -1],
     ];
 
-    for (let move of iterMove) {
+    for (const move of iterMove) {
       await test.step({
         name: "Step: " + (index + 1).toString(),
         fn: () => {

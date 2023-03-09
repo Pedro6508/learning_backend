@@ -12,7 +12,7 @@ export interface RiverMap {
 }
 
 export async function mapParse(path: string): Promise<RiverMap> {
-  let map: RiverMap = {
+  const map: RiverMap = {
     data: [],
     source: [0, 0],
   };
@@ -38,7 +38,7 @@ export async function mapParse(path: string): Promise<RiverMap> {
 
   const map_lines = map_str.split("],");
 
-  for (let line of map_lines) {
+  for (const line of map_lines) {
     map.data.push(lineParse(line));
   }
 
@@ -110,7 +110,7 @@ export class IterMove implements IterableIterator<[number, number]> {
 }
 
 function lineParse(str: String): Array<Floor> { // str has no spaces ou breaklines
-  let result: Array<Floor> = [];
+  const result: Array<Floor> = [];
 
   const pure_str = str.slice(1).split(",");
 
@@ -120,7 +120,7 @@ function lineParse(str: String): Array<Floor> { // str has no spaces ou breaklin
     );
   }
 
-  for (let char of pure_str) {
+  for (const char of pure_str) {
     switch (char) {
       case "O":
         result.push(Floor.Outlet);
