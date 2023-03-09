@@ -9,13 +9,17 @@ export interface RiverMap {
   source: [number, number];
 }
 
-export function mapParse(path: string): RiverMap {
+export async function mapParse(path: string): Promise<RiverMap> {
   let map: RiverMap = {
     data: [[]],
     source: [0, 0],
   };
 
-  return map;
+  const file = await Deno.readTextFile(path);
+
+  return new Promise((resolve, _) => {
+    resolve(map);
+  });
 }
 
 interface MapLimits {

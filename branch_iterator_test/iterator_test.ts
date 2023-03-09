@@ -35,7 +35,7 @@ Deno.test({
 Deno.test({
   name: "parse",
   permissions: { read: true },
-  fn: () => {
+  fn: async () => {
     const expected_map: RiverMap = {
       data: [
         [
@@ -91,7 +91,7 @@ Deno.test({
     };
 
     assertEquals(
-      mapParse("./map/_parse_test.txt"),
+      await mapParse("./map/_parse_test.txt"),
       expected_map,
     );
   },
@@ -215,7 +215,7 @@ Deno.test({
 Deno.test({
   name: "full",
   permissions: { read: true },
-  fn: () => {
+  fn: async () => {
     const expected_map: RiverMap = {
       data: [
         [
@@ -272,7 +272,7 @@ Deno.test({
 
     assertEquals(
       riverRun(
-        mapParse("./map/_parse_test.txt"),
+        await mapParse("./map/_parse_test.txt"),
       ),
       expected_map,
     );
