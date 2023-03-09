@@ -1,8 +1,39 @@
 import { assertEquals } from "standart";
-import { Floor, mapParse, RiverMap, riverRun } from "./iterator.ts";
+import { Floor, IterMove, mapParse, RiverMap, riverRun } from "./iterator.ts";
 
 Deno.test({
-  name: "Teste de Parse",
+  name: "iterator",
+  fn: async (test) => {
+    let iterMove = new IterMove();
+
+    let index = 0;
+    const expectedMove = [
+      [1, 0],
+      [0, 1],
+      [-1, 0],
+      [0, -1],
+    ];
+
+    for (let move of iterMove) {
+      await test.step({
+        name: "Step: " + (index + 1).toString(),
+        fn: () => {
+          assertEquals(
+            move,
+            expectedMove[index],
+            String("Actual: " + move) +
+              String(" | Expected: " + expectedMove[index]),
+          );
+        },
+      });
+
+      index += 1;
+    }
+  },
+});
+
+Deno.test({
+  name: "parse",
   permissions: { read: true },
   fn: () => {
     const expected_map: RiverMap = {
@@ -67,7 +98,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "Teste de Percurso",
+  name: "dfs-run",
   fn: () => {
     const initial_map: RiverMap = {
       data: [
@@ -182,7 +213,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "Teste geral",
+  name: "full",
   permissions: { read: true },
   fn: () => {
     const expected_map: RiverMap = {
