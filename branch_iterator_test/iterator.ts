@@ -1,3 +1,5 @@
+import { assertEquals } from "standart";
+
 export enum Floor {
   Flat, // F
   Outlet, // O
@@ -47,14 +49,14 @@ export function riverRun(map: RiverMap): RiverMap {
   return map;
 }
 
-class WaterMove implements Iterator<[number, number] | undefined> {
+class WaterMove implements IterableIterator<[number, number] | undefined> {
   private position: [number, number];
   private value: Floor;
   readonly map: RiverMap;
   readonly limits: MapLimits;
 
   private done: boolean;
-  private moveIndex: number;
+  public moveIndex: number; // change to private
   readonly moveList: Array<[number, number]>;
 
   private safeMove(next: [number, number]): boolean {
@@ -101,17 +103,33 @@ class WaterMove implements Iterator<[number, number] | undefined> {
     ];
   }
 
-  ignoreAndNext(): IteratorResult<[number, number] | undefined> {
+  returnAndPrepare(
+    value: [number, number] | undefined,
+  ): IteratorResult<[number, number] | undefined> {
     if (this.moveIndex >= this.moveList.length - 1) {
+      this.done = true;
+
       return {
-        done: true,
-        value: undefined,
+        done: this.done,
+        value: value,
       };
     } else {
       this.moveIndex += 1;
       return this.next();
     }
   }
+
+  // ignoreAndNext(): IteratorResult<[number, number] | undefined> {
+  //   if (this.moveIndex >= this.moveList.length - 1) {
+  //     return {
+  //       done: true,
+  //       value: undefined,
+  //     };
+  //   } else {
+  //     this.moveIndex += 1;
+  //     return this.next();
+  //   }
+  // }
 
   public next(): IteratorResult<[number, number] | undefined> {
     if (this.done == true) {
@@ -120,23 +138,103 @@ class WaterMove implements Iterator<[number, number] | undefined> {
         value: undefined,
       };
     } else {
-      const [i, j] = this.moveList[this.moveIndex];
+      const [raw_i, raw_j] = this.moveList[this.moveIndex];
+      const [i, j] = [this.position[0] + raw_i, this.position[1] + raw_j];
 
       if (this.safeMove([i, j]) === true) {
-        switch (this.map.data[i][j]) {
-          case Floor.Flat: {
-            return {
-              done: false,
-              value: [i, j],
-            };
-          }
-          default: {
-            return this.ignoreAndNext();
-          }
+        if (this.map.data[i][j] === Floor.Flat) {
+          this.moveIndex += 1;
+
+          return this.returnAndPrepare([i, j]);
+        } else {
+          return this.returnAndPrepare(undefined);
         }
       } else {
-        return this.ignoreAndNext();
+        return this.returnAndPrepare(undefined);
       }
     }
   }
+
+  [Symbol.iterator](): IterableIterator<[number, number] | undefined> {
+    return this;
+  }
 }
+
+Deno.test({
+  name: "Class Test: WaterMove Iterator",
+  fn: (test) => {
+    const map: RiverMap = {
+      data: [
+        [Floor.Flat, Floor.Flat, Floor.Flat],
+        [Floor.Flat, Floor.Water, Floor.Flat],
+        [Floor.Flat, Floor.Flat, Floor.Flat],
+      ],
+      source: [1, 1],
+    };
+
+    const expected_map: RiverMap = {
+      data: [
+        [Floor.Flat, Floor.Water, Floor.Flat],
+        [Floor.Water, Floor.Water, Floor.Water],
+        [Floor.Flat, Floor.Water, Floor.Flat],
+      ],
+      source: [1, 1],
+    };
+
+    const [i, j] = map.source;
+    const iter = new WaterMove(
+      map.source,
+      map.data[i][j],
+      map,
+      findMapLimits(map),
+    );
+
+    let index = 0;
+    let position = iter.next();
+    while (position.value != undefined) {
+      test.step({
+        name: "Loop num: " + index.toString(),
+        fn: () => {
+          const [x, y] = [
+            map.source[0] + iter.moveList[index][0],
+            map.source[1] + iter.moveList[index][1],
+          ];
+          index += 1;
+
+          assertEquals(
+            position.value,
+            [x, y],
+            "position.value: " + String(position.value) + " | [x,y]: " +
+              String([x, y]),
+          );
+        },
+      });
+
+      position = iter.next();
+    }
+
+    // for (let floor of iter) {
+    //   test.step({
+    //     name: "Loop num: " + index.toString(),
+    //     fn: () => {
+    //       const [x, y] = [
+    //         map.source[0] + iter.moveList[index][0],
+    //         map.source[1] + iter.moveList[index][1],
+    //       ];
+    //       index += 1;
+
+    //       assertEquals(floor, [x, y]);
+    //     },
+    //   });
+    // }
+
+    // for (let floor of iter) {
+    //   if (floor != undefined) {
+    //     const [i, j] = floor;
+    //     map.data[i][j] = Floor.Water;
+    //   }
+    // }
+
+    // assertEquals(map, expected_map);
+  },
+});
