@@ -1,3 +1,5 @@
+import { assertEquals } from "standart";
+
 export enum Floor {
   Flat, // F
   Outlet, // O
@@ -11,11 +13,34 @@ export interface RiverMap {
 
 export async function mapParse(path: string): Promise<RiverMap> {
   let map: RiverMap = {
-    data: [[]],
+    data: [],
     source: [0, 0],
   };
 
-  const file = await Deno.readTextFile(path);
+  const file_content = await Deno.readTextFile(path);
+  const raw_map = file_content.replaceAll("\n", "").replaceAll(" ", "");
+  const map_beg = raw_map.search("MAP:{");
+  let map_str = raw_map.slice(map_beg + 5, -1);
+
+  switch (map_str.slice(-1)) {
+    case ",":
+      map_str = map_str.slice(0, -2);
+      break;
+    case "]":
+      map_str = map_str.slice(0, -1);
+      break;
+    default:
+      throw new Error(
+        "Invalid Input: The map end's don't is dirty | end: " +
+          map_str,
+      );
+  }
+
+  const map_lines = map_str.split("],");
+
+  for (let line of map_lines) {
+    map.data.push(lineParse(line));
+  }
 
   return new Promise((resolve, _) => {
     resolve(map);
@@ -83,3 +108,56 @@ export class IterMove implements IterableIterator<[number, number]> {
     return this;
   }
 }
+
+function lineParse(str: String): Array<Floor> { // str has no spaces ou breaklines
+  let result: Array<Floor> = [];
+
+  const pure_str = str.slice(1).split(",");
+
+  if (str[0] !== "[") {
+    throw new Error(
+      "Invalid Input: Line array is dirty | str:" + str,
+    );
+  }
+
+  for (let char of pure_str) {
+    switch (char) {
+      case "O":
+        result.push(Floor.Outlet);
+        break;
+      case "W":
+        result.push(Floor.Water);
+        break;
+      case "F":
+        result.push(Floor.Flat);
+        break;
+      default:
+        throw new Error(
+          "Invalid Input: Invalid line array element | element:" +
+            str.indexOf(char),
+        );
+    }
+  }
+
+  return result;
+}
+
+Deno.test({
+  name: "Teste de parse de linha",
+  fn: () => {
+    const line = "[O,F,F,F,F,W";
+    const expected_parse = [
+      Floor.Outlet,
+      Floor.Flat,
+      Floor.Flat,
+      Floor.Flat,
+      Floor.Flat,
+      Floor.Water,
+    ];
+
+    assertEquals(
+      lineParse(line),
+      expected_parse,
+    );
+  },
+});

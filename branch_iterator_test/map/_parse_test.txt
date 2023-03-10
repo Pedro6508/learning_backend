@@ -1,5 +1,5 @@
-{
-    [S,F,F,F,F,F],
+MAP: {
+    [W,F,F,F,F,F],
     [F,F,F,F,F,F],
     [F,F,F,F,F,F],
     [F,F,F,F,F,F],
