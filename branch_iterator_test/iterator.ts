@@ -111,7 +111,6 @@ export class IterMove implements IterableIterator<[number, number]> {
 
 function lineParse(str: String): Array<Floor> { // str has no spaces ou breaklines
   const result: Array<Floor> = [];
-
   const pure_str = str.slice(1).split(",");
 
   if (str[0] !== "[") {
