@@ -47,31 +47,6 @@ export async function mapParse(path: string): Promise<RiverMap> {
   });
 }
 
-interface MapLimits {
-  hight: {
-    beg: number;
-    end: number;
-  };
-
-  length: {
-    beg: number;
-    end: number;
-  };
-}
-
-function findMapLimits(map: RiverMap): MapLimits {
-  return {
-    hight: {
-      beg: 0,
-      end: map.data.length - 1,
-    },
-    length: {
-      beg: 0,
-      end: map.data[0].length - 1,
-    },
-  };
-}
-
 function verifyLimits([i, j]: [number, number], map: RiverMap): boolean {
   let result = false;
 
