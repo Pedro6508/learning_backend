@@ -72,7 +72,50 @@ function findMapLimits(map: RiverMap): MapLimits {
   };
 }
 
+function verifyLimits([i, j]: [number, number], map: RiverMap): boolean {
+  let result = false;
+
+  if (
+    i >= 0 &&
+    i <= map.data.length - 1
+  ) {
+    if (
+      j >= 0 &&
+      j <= map.data[i].length - 1
+    ) {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
 export function riverRun(map: RiverMap): RiverMap {
+  const fifo: Array<[number, number]> = [];
+
+  fifo.push(map.source);
+
+  while (fifo.length != 0) {
+    const iter: IterMove = new IterMove();
+    const [i, j] = fifo[0];
+    fifo.shift();
+
+    for (const [ip, jp] of iter) { // *p = * plus
+      const [ir, jr] = [i + ip, j + jp]; // *r = * result
+
+      if (verifyLimits([ir, jr], map) === true) {
+        const value = map.data[ir][jr];
+
+        if (value === Floor.Flat) {
+          map.data[ir][jr] = Floor.Water;
+          fifo.push([ir, jr]);
+        } else if (value === Floor.Outlet) {
+          return map;
+        }
+      }
+    }
+  }
+
   return map;
 }
 
