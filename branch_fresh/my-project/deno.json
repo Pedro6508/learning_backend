@@ -1,6 +1,8 @@
 {
   "tasks": {
-    "start": "deno run -A --watch=static/,routes/ dev.ts"
+    "start": "deno run --watch=static/,routes/ dev.ts",
+    "start-essent": "deno run --allow-net --allow-read --allow-env --allow-run --watch=static/,routes/ dev.ts",
+    "start-A": "deno run -A --watch=static/,routes/ dev.ts"
   },
   "importMap": "./import_map.json",
   "compilerOptions": {
