@@ -15,6 +15,7 @@ export const handler: Handlers<User | null> = {
     if (resp.status === 404) {
       return ctx.render(null);
     }
+    
     const user: User = await resp.json();
     return ctx.render(user);
   },

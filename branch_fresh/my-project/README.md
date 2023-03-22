@@ -18,7 +18,7 @@ This will watch the project directory and restart as necessary.
 
   No Deno `run -A` sgnifica `run --allow-all`
 
-* -> A task `start-essent` foi criada para ser a start, mas com as permissões
+* -> A task `start-E` foi criada para ser a start, mas com as permissões
   essenciais concedidas.
 
 * -> A task `start-A` foi criada para ser a start, mas com todas as permissões
